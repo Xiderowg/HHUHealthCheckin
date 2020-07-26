@@ -1,0 +1,9 @@
+default_context:
+    project_name: "HHUCheckin"
+    app_name: "CheckinEndpoint"
+    python_version: "3.7"
+    admin_user_username: "admin"
+    admin_user_email: "admin@edlinus.cn"
+    admin_user_password: "alexlyn"
+    use_celery: "yes"
+    wsgi_server: "gunicorn"

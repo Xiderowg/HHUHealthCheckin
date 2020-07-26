@@ -1,0 +1,35 @@
+# WARNING: this file is not suitable for production, please use with caution
+version: '3'
+
+services:
+  web:
+    image: CheckinEndpoint
+    build: .
+    command: gunicorn -b 0.0.0.0:5000 CheckinEndpoint.wsgi:app
+    env_file:
+      - ./.flaskenv
+    environment:
+      - DATABASE_URI=sqlite:////db/CheckinEndpoint.db
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq
+      - CELERY_RESULT_BACKEND_URL=redis://redis
+    volumes:
+      - ./CheckinEndpoint:/code/CheckinEndpoint
+      - ./db/:/db/
+    ports:
+      - "5000:5000"
+  rabbitmq:
+    image: rabbitmq
+  redis:
+    image: redis
+  celery:
+    image: CheckinEndpoint
+    command: "celery worker -A CheckinEndpoint.celery_app:app"
+    env_file:
+      - ./.flaskenv
+    volumes:
+      - .:/code
+    depends_on:
+      - rabbitmq
+    environment:
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq
+      - CELERY_RESULT_BACKEND_URL=redis://redis
