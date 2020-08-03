@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
 from CheckinEndpoint.api.schemas import UserSchema, UserCheckinDataSchema
 from CheckinEndpoint.models import User, UserCheckinData
@@ -10,6 +10,26 @@ from CheckinEndpoint.commons.role import admin_required
 
 
 class UserResource(Resource):
+    method_decorators = [jwt_required]
+
+    def get(self):
+        user_id = get_jwt_identity()
+        schema = UserSchema()
+        user = User.query.get(user_id)
+        return {"user": schema.dump(user)}
+
+    def put(self):
+        user_id = get_jwt_identity()
+        schema = UserSchema(partial=True)
+        user = User.query.get_or_404(user_id)
+        user = schema.load(request.json, instance=user)
+
+        db.session.commit()
+
+        return {"msg": "user updated", "user": schema.dump(user)}
+
+
+class AdminUserResource(Resource):
     """Single object resource
 
     ---
@@ -105,7 +125,7 @@ class UserResource(Resource):
         return {"msg": "user deleted"}
 
 
-class UserList(Resource):
+class AdminUserList(Resource):
     """Creation and get_all
 
     ---

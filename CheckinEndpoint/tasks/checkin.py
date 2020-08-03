@@ -3,14 +3,20 @@ import json
 import requests
 from datetime import datetime
 from bs4 import BeautifulSoup
-from CheckinEndpoint.extensions import celery
+from CheckinEndpoint.extensions import celery, db
 from CheckinEndpoint.models import User
 from CheckinEndpoint.api.schemas import UserCheckinDataSchema
 
 
 @celery.task
 def checkin(user: User):
+    # 如果是管理员，那就不打卡
+    if user.is_admin:
+        return "OK"
+    # 查找用户打卡记录
     checkin_schema = UserCheckinDataSchema.query.get(user.id)
+    if checkin_schema is None:
+        return "User's checkin data not found"
     ua = {
         "User-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36"}
     # 登录
@@ -52,6 +58,11 @@ def checkin(user: User):
     # 打卡
     res = s.post(api_url, checkin_data)
     if res.status_code == 200:
+        checkin_schema.last_checkin_time = datetime.now()
+        checkin_schema.total_checkin_count += 1
+        db.session.commit()
         return "OK"
     else:
+        checkin_schema.total_fail_count += 1
+        db.session.commit()
         return "Checkin failed on last procedure"
