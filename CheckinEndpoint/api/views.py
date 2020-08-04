@@ -6,7 +6,7 @@ from CheckinEndpoint.api.resources import AdminUserResource, AdminUserList, User
     AdminCheckinResource, CheckinResource, AdminUserCheckinDataResource, UserResource
 from CheckinEndpoint.api.schemas import UserSchema, UserCheckinDataSchema
 
-blueprint = Blueprint("api", __name__, url_prefix="/api/v1")
+blueprint = Blueprint("api", __name__, url_prefix="")
 api = Api(blueprint)
 
 api.add_resource(AdminUserResource, "/users/<int:user_id>", endpoint="get_user_by_id")

@@ -181,13 +181,18 @@ class CreateUserResource(Resource):
 
     def post(self):
         schema = UserSchema()
-        user = schema.load(request.json)
+        user = schema.load(request.json,instance=User)
         user.is_admin = False
+
+        # 检查是否有用户名重名
+        tmp = User.query.filter_by(username=user.username).first()
+        if tmp:
+            return {"msg": "username was taken"}, 403
 
         data_schema = UserCheckinDataSchema()
         checkin_data = data_schema.load(
             {"id": user.id, "username": user.username, "last_checkin_time": datetime(1990, 1, 1),
-             "total_checkin_count": 0, "total_fail_count": 0})
+             "total_checkin_count": 0, "total_fail_count": 0},instance=UserCheckinData)
 
         db.session.add(user)
         db.session.add(checkin_data)
