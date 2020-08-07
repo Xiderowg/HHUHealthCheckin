@@ -1,5 +1,6 @@
 <template>
 	<view class="content">
+		<image class="image" mode="widthFix" src="../../static/img/logo.jpg" />
 		<view class="input-group">
 			<view class="input-row border">
 				<text class="title">账 号：</text>
@@ -144,10 +145,20 @@
 				// 获取用户的信息
 				readInfo().then(res => {
 					// 更新到store里面
-					this.$store.commit("userInfo", res.is_admin, res.is_admin, res.id);
+					this.$store.commit("userInfo", {
+						isAdmin: res.is_admin,
+						userID: res.id,
+						userEmail: res.email
+					});
+					console.log("更新用户信息成功")
 				}).catch(err => {
+					debugger;
 					// 请求失败，默认用户为匿名用户，且不是管理员
-					this.$store.commit("userInfo", false, -1);
+					this.$store.commit("userInfo", {
+						isAdmin: false,
+						userId: -1,
+						userEmail: ''
+					});
 				})
 				/**
 				 * 强制登录时使用reLaunch方式跳转过来
@@ -232,5 +243,9 @@
 		width: 100%;
 		height: 100%;
 		opacity: 0;
+	}
+	.image {
+		margin:0;
+		width: 100%;
 	}
 </style>

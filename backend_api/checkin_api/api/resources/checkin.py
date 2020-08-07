@@ -39,5 +39,7 @@ class AdminCheckinResource(Resource):
         """
         query = User.query
         for user in query:
+            print("now checkin for "+user.username)
             checkin.delay(user.username, user.password, user.email, user.is_admin)
+            # print("result:"+ret)
         return {'msg': 'tasks started'}, 201

@@ -5,6 +5,7 @@ flask-migrate
 flask-sqlalchemy
 flask-marshmallow
 flask-jwt-extended
+flask-cors
 marshmallow-sqlalchemy
 python-dotenv
 passlib

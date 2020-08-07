@@ -46,8 +46,10 @@ class AdminUserResource(Resource):
     def put(self, user_id):
         schema = UserSchema(partial=True)
         user = User.query.get_or_404(user_id)
+        old_name=user.username
         user = schema.load(request.json, instance=user)
-
+        if user.username!=old_name:
+            user.username=old_name
         db.session.commit()
 
         return {"msg": "user updated", "user": schema.dump(user)}

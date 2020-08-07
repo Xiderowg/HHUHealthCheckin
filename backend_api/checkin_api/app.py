@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from celery.schedules import crontab
 from checkin_api import auth, api
 from checkin_api.extensions import db, jwt, migrate, apispec, celery
@@ -9,6 +10,7 @@ def create_app(testing=False, cli=False):
     """
     app = Flask("checkin_api")
     app.config.from_object("checkin_api.config")
+    cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
     if testing is True:
         app.config["TESTING"] = True

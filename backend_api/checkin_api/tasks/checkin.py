@@ -111,7 +111,7 @@ def checkin(username, password, email, is_admin):
         user_checkin_data.last_checkin_time = datetime.now()
         user_checkin_data.total_checkin_count += 1
         db.session.commit()
-        sendmail.delay(username, email)
+        sendmail(username, email)
         return "OK"
     else:
         user_checkin_data.total_fail_count += 1

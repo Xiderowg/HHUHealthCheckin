@@ -16,9 +16,9 @@ const store = new Vuex.Store({
 		isAdmin: false
 	},
 	mutations: {
-		login(state, userName, userEmail) {
+		login(state, userName) {
 			state.userName = userName || '新用户';
-			state.userEmail = userEmail || '';
+			state.userEmail = '';
 			state.hasLogin = true;
 		},
 		logout(state) {
@@ -28,9 +28,10 @@ const store = new Vuex.Store({
 			state.isAdmin = false;
 			state.hasLogin = false;
 		},
-		userInfo(state, isAdmin, id) {
-			state.isAdmin = isAdmin || false;
-			state.userID = id || -1;
+		userInfo(state, data) {
+			state.isAdmin = data.isAdmin || false;
+			state.userID = data.userID;
+			state.userEmail=data.userEmail;
 		}
 	}
 })

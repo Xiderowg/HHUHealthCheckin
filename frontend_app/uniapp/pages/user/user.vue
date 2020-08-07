@@ -1,32 +1,38 @@
 <template>
-	<view class="content">
+	<view class="content" v-if="hasLogin">
+		<image class="image" mode="widthFix" src="../../static/img/logo.jpg" />
 		<view class="input-group">
 			<view class="input-row border">
-				<text class="title">邮 箱：</text>
-				<m-input class="m-input" type="text" clearable focus v-model="email" placeholder="请输入邮箱"></m-input>
+				<text class="title">邮箱：</text>
+				<m-input class="m-input" type="text" clearable focus v-model="userEmail" placeholder="请输入邮箱"></m-input>
 			</view>
 			<view class="input-row">
-				<text class="title">新 密 码：</text>
+				<text class="title">新密码：</text>
 				<m-input type="password" displayable v-model="password" placeholder="请输入密码"></m-input>
 			</view>
 			<view class="input-row">
-				<text class="title">重复密码：</text>
+				<text class="title">重复：</text>
 				<m-input type="password" displayable v-model="confirmPassword" placeholder="请再一次输入密码"></m-input>
-			</view>
+			</view> 
 			<view class="input-row">
-				<text class="title">验 证 码：</text>
+				<text class="title">验证码：</text>
 				<m-input class="m-input" type="text" v-model="usercode" placeholder="请输入验证码"></m-input>
 				<valid-code v-model="validcode" :refresh="refreshcode" />
 			</view>
-			<view class="input-row">
+			<view class="btn-row" style="margin-top: 0;">
 				<button type="primary" class="primary" @tap="userUpdate">更新信息</button>
 			</view>
 		</view>
-		<view class="btn-row">
+		<view class="btn-row" style="margin-top: 10rpx;">
 			<button type="primary" class="primary" @tap="userCheckin">手动签到</button>
 			<button v-if="isAdmin" type="default" @tap="adminCheckin">全员签到</button>
-			<button v-if="!hasLogin" type="primary" class="primary" @tap="bindLogin">登录</button>
-			<button v-if="hasLogin" type="default" @tap="bindLogout">退出登录</button>
+			<button type="default" @tap="bindLogout">退出登录</button>
+		</view>
+	</view>
+	<view class="content" v-else>
+		<text>请登录后进行查看详细信息</text>
+		<view class="btn-row">
+			<button v-if="!hasLogin" type="primary" class="primary" @tap="bindLogin">点我登录</button>
 		</view>
 	</view>
 </template>
@@ -43,20 +49,27 @@
 		mapState,
 		mapMutations
 	} from 'vuex'
+	import mInput from '../../components/m-input.vue'
+	import validCode from '../../components/valid-code.vue'
 
 	export default {
-		computed: {
-			...mapState(['hasLogin', 'forcedLogin', 'isAdmin', 'userName', 'userID', 'userEmail'])
+		components: {
+			mInput,
+			validCode
 		},
 		data() {
 			return {
-				username: userName,
-				usermail: userEmail,
 				password: '',
 				confirmPassword: '',
 				usercode: '',
 				validcode: '',
-				refreshcode: 0
+				refreshcode: 0,
+				hasLogin: this.$store.state.hasLogin,
+				forcedLogin: this.$store.state.forcedLogin,
+				isAdmin: this.$store.state.isAdmin,
+				userName: this.$store.state.userName,
+				userID: this.$store.state.userID,
+				userEmail: this.$store.state.userEmail
 			}
 		},
 		methods: {
@@ -140,8 +153,7 @@
 				}
 				// 更新信息
 				const data = {
-					username: this.username,
-					email: this.usermail,
+					email: this.userEmail,
 					password: this.password
 				};
 				updateInfo(data).then(res => {
@@ -159,5 +171,11 @@
 </script>
 
 <style>
-
+	.image {
+		margin:0;
+		width: 100%;
+	}
+	.btn-row button{
+		margin-top: 20rpx;
+	}
 </style>

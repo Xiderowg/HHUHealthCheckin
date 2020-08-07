@@ -64,16 +64,15 @@ def admin_user(db):
 
 @pytest.fixture
 def test_user(db):
-    # TODO: REMOVE IT BEFORE OPEN SOURCE
     test_user = User(
-        username='181301010072',
-        email='xiderowg@foxmail.com',
-        password='050039',
+        username='0000000000000',
+        email='0000@000.com',
+        password='000000',
         is_admin=False
     )
 
     test_data = UserCheckinData(
-        username='181301010072',
+        username='0000000000000',
         last_checkin_time=datetime(1990, 1, 1),
         total_checkin_count=0,
         total_fail_count=0

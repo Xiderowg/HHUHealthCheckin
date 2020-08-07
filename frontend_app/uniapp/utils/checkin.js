@@ -5,7 +5,7 @@ import {
 
 const adminCheckin = function() {
 	return new Promise((resolve, reject) => {
-		http.post("/checkin/all", {
+		http.post("/checkin/all",{}, {
 			custom: {
 				auth: true
 			}
@@ -19,7 +19,7 @@ const adminCheckin = function() {
 
 const userCheckin = function() {
 	return new Promise((resolve, reject) => {
-		http.post("/checkin", {
+		http.post("/checkin",{}, {
 			custom: {
 				auth: true
 			}
@@ -39,8 +39,9 @@ const loadCheckinData = function() {
 				}
 			})
 			.then(res => {
-				resolve(res.checkin_data);
+				resolve(res.data.checkin_data);
 			}).catch(err => {
+				debugger;
 				reject("获取打卡信息失败");
 			})
 	});

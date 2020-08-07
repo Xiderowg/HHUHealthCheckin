@@ -6,7 +6,7 @@ import store from '../store/index.js'
 
 const login = function(data) {
 	return new Promise((resolve, reject) => {
-		response = http.post('/login', data)
+		var response = http.post('/auth/login', data)
 			.then(res => {
 				jwt.setAccessToken(res.data.access_token);
 				resolve();
@@ -29,18 +29,21 @@ const register = function(data) {
 
 const readInfo = function() {
 	return new Promise((resolve, reject) => {
-		response = http.post('/users', {
+		var response = http.get('/users', {
 				custom: {
 					auth: true
 				}
 			})
 			.then(res => {
+				console.log(res);
 				// 请求成功则返回用户是否为管理员以及用户的id
 				resolve({
 					is_admin: res.data.user.is_admin,
-					id: res.data.user.id
+					id: res.data.user.id,
+					email: res.data.user.email
 				});
 			}).catch(err => {
+				debugger;
 				// 请求出现问题
 				reject("请求权限失败");
 			})

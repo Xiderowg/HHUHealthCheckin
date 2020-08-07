@@ -129,6 +129,10 @@
 	}
 
 	button.primary {
-		background-color: #0faeff;
+		background-color: rgb(0, 122, 255);
+	}
+	
+	.uni-page-head{
+		background-color: rgb(0, 122, 255)!important;
 	}
 </style>

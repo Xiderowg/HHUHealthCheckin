@@ -2,7 +2,7 @@ import Request from '@/js_sdk/luch-request/luch-request/index.js'
 import jwt from './jwt.js' // JWT管理
 
 const http = new Request();
-const baseUrl = "http://127.0.0.1:1234";
+const baseUrl = "http://127.0.0.1:5000";
 
 /* 设置全局配置 */
 http.setConfig((config) => {
@@ -20,7 +20,7 @@ http.interceptors.request.use((config) => {
 			title: '加载中...'
 		});
 	}
-	if (config.custom.need_auth) {
+	if (config.custom.auth) {
 		// 需要权限认证的路由 需携带自定义参数 {custom: {auth: true}}
 		config.header.Authorization = jwt.getAccessToken();
 	}
@@ -29,8 +29,8 @@ http.interceptors.request.use((config) => {
 	return Promise.reject(config);
 })
 
-http.interceptors.response.use(async (response) => { /* 请求之后拦截器 */
-	console.log(response);
+http.interceptors.response.use((response) => { /* 请求之后拦截器 */
+	// console.log(response);
 	if (response.config.custom.loading) {
 		uni.hideLoading()
 	}

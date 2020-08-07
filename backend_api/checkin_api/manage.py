@@ -24,9 +24,9 @@ def init():
     from checkin_api.models import User, UserCheckinData
     from datetime import datetime
 
-    click.echo("create user")
-    user = User(username="admin", email="admin@edlinus.cn", password="alexlyn", is_admin=True)
-    checkin_data = UserCheckinData(id=user.id, username=user.username, last_checkin_time=datetime(1990, 1, 1),
+    click.echo("creating user")
+    user = User(username="admin", email="admin@edlinus.cn", password="admin", is_admin=True)
+    checkin_data = UserCheckinData(username="admin", last_checkin_time=datetime(1990, 1, 1),
                                    total_checkin_count=0, total_fail_count=0)
     db.session.add(user)
     db.session.add(checkin_data)
