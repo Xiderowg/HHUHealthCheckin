@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="e05bfc2d-3185-4956-b71d-5d7f4f5171f3" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.dockerignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.flaskenv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/HHUCheckin.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/api/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/api/resources/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/api/resources/checkin.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/api/resources/user.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/api/resources/user_checkin_data.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/api/schemas/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/api/schemas/user.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/api/schemas/user_checkin_data.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/api/views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/app.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/auth/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/auth/helpers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/auth/views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/celery_app.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/commons/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/commons/apispec.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/commons/pagination.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/commons/role.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/commons/templates/swagger.j2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/config.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/extensions.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/manage.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/models/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/models/blacklist.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/models/user.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/tasks/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/tasks/checkin.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinEndpoint/wsgi.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/App.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/components/m-icon/m-icon.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/components/m-icon/m-icon.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/components/m-input.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/components/u-charts/u-charts.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/components/valid-code.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/js_sdk/luch-request/luch-request/adapters/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/js_sdk/luch-request/luch-request/core/InterceptorManager.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/js_sdk/luch-request/luch-request/core/Request.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/js_sdk/luch-request/luch-request/core/buildFullPath.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/js_sdk/luch-request/luch-request/core/defaults.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/js_sdk/luch-request/luch-request/core/dispatchRequest.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/js_sdk/luch-request/luch-request/core/mergeConfig.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/js_sdk/luch-request/luch-request/core/settle.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/js_sdk/luch-request/luch-request/helpers/buildURL.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/js_sdk/luch-request/luch-request/helpers/combineURLs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/js_sdk/luch-request/luch-request/helpers/isAbsoluteURL.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/js_sdk/luch-request/luch-request/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/js_sdk/luch-request/luch-request/utils.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/pages.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/pages/login/login.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/pages/main/main.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/pages/pwd/pwd.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/pages/reg/reg.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/pages/user/user.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/service.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/static/img/home.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/static/img/homeHL.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/static/img/user.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/static/img/userHL.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/store/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/utils/auth.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/utils/checkin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/utils/http.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckinFrontend/CheckinUniApp/utils/jwt.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cookiecutter-options.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/README" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/alembic.ini" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/env.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/script.py.mako" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/versions/3c403aee5d08_initial_migration.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/conftest.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/factories.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_auth.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_celery.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_user.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tox.ini" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JupyterTrust" id="5ccbc0e1-7631-4ffe-b76a-2f4a9d89be4b" />
+  <component name="ProjectId" id="1fjKOiGnzTCNotk2P7Yqt2XPFcH" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend_api" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e05bfc2d-3185-4956-b71d-5d7f4f5171f3" name="Default Changelist" comment="" />
+      <created>1596726033143</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1596726033143</updated>
+      <workItem from="1596726034371" duration="14000" />
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1596726045881">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1596726045881" />
+  </component>
+</project>
