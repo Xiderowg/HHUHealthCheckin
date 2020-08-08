@@ -3,6 +3,7 @@ from flask_cors import CORS
 from celery.schedules import crontab
 from checkin_api import auth, api
 from checkin_api.extensions import db, jwt, migrate, apispec, celery
+from checkin_api.tasks.checkin import auto_checkin
 
 
 def create_app(testing=False, cli=False):
@@ -74,7 +75,7 @@ def init_celery(app=None):
         beat_schedule={
             "auto_checkin": {
                 "task": "checkin_api.tasks.checkin.auto_checkin",
-                "schedule": crontab(minute=10, hour="*/1"),
+                "schedule": crontab(minute='*/10,5-59', hour="18-20"),
                 "args": ()
             },
         }
@@ -89,3 +90,8 @@ def init_celery(app=None):
 
     celery.Task = ContextTask
     return celery
+
+
+# @celery.on_after_configure.connect
+# def setup_periodic_tasks(sender, **kwargs):
+#     sender.add_periodic_task(10.0, auto_checkin, name='autocheckin_test')

@@ -18,10 +18,12 @@ const login = function(data) {
 
 const register = function(data) {
 	return new Promise((resolve, reject) => {
-		response = http.post('/users/create', data)
+		var response = http.post('/users/create', data)
 			.then(res => {
+				console.log(res.data)
 				resolve();
 			}).catch(err => {
+				debugger;
 				reject("注册失败");
 			})
 	})
@@ -29,6 +31,7 @@ const register = function(data) {
 
 const readInfo = function() {
 	return new Promise((resolve, reject) => {
+		console.log(jwt.getAccessToken());
 		var response = http.get('/users', {
 				custom: {
 					auth: true

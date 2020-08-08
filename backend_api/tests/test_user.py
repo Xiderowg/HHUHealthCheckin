@@ -86,7 +86,7 @@ def test_create_user(client, db, admin_headers):
     data["email"] = "create@mail.com"
 
     rep = client.post(users_url, json=data, headers=admin_headers)
-    assert rep.status_code == 201
+    assert rep.status_code == 200
 
     data = rep.get_json()
     user = db.session.query(User).filter_by(id=data["user"]["id"]).first()

@@ -99,14 +99,15 @@
 				// service.addUser(data);
 				register(data).then(res => {
 					uni.showToast({
-						title: '注册成功'
+						title: '注册成功，即将返回'
 					});
 					uni.navigateBack({
 						delta: 1
 					});
 				}).catch(err => {
+					debugger;
 					uni.showToast({
-						title: '注册失败，用户名已经被注册'
+						title: '注册失败，用户名已经被注册。'
 					});
 				})
 

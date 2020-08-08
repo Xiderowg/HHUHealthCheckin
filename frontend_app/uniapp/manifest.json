@@ -1,5 +1,5 @@
 {
-    "name" : "CheckinUniApp",
+    "name" : "可每打卡",
     "appid" : "",
     "description" : "河海大学健康打卡小程序",
     "versionName" : "1.0.0",
@@ -50,7 +50,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "",
+        "appid" : "wx6dc894ae094d911a",
         "setting" : {
             "urlCheck" : false
         },

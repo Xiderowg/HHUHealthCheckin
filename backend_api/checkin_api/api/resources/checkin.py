@@ -21,7 +21,7 @@ class CheckinResource(Resource):
         user = User.query.get_or_404(user_id)
         if user is not None:
             checkin.delay(user.username, user.password, user.email, user.is_admin)
-            return {'msg': 'task started'}, 201
+            return {'msg': 'task started'}, 200
         else:
             return {'msg': 'wrong user id'}, 400
 
@@ -42,4 +42,4 @@ class AdminCheckinResource(Resource):
             print("now checkin for "+user.username)
             checkin.delay(user.username, user.password, user.email, user.is_admin)
             # print("result:"+ret)
-        return {'msg': 'tasks started'}, 201
+        return {'msg': 'tasks started'}, 200

@@ -2,7 +2,8 @@ import Request from '@/js_sdk/luch-request/luch-request/index.js'
 import jwt from './jwt.js' // JWT管理
 
 const http = new Request();
-const baseUrl = "http://127.0.0.1:5000";
+// const baseUrl = "http://127.0.0.1:5000";
+const baseUrl = "https://api.edlinus.cn/checkin_restful";
 
 /* 设置全局配置 */
 http.setConfig((config) => {
@@ -30,7 +31,7 @@ http.interceptors.request.use((config) => {
 })
 
 http.interceptors.response.use((response) => { /* 请求之后拦截器 */
-	// console.log(response);
+	console.log(response);
 	if (response.config.custom.loading) {
 		uni.hideLoading()
 	}

@@ -58,14 +58,14 @@ def checkin(username, password, email, is_admin):
     """
     # 如果是管理员，那就不打卡
     if is_admin:
-        return "OK"
+        return "Admin User OK"
     # 查找用户打卡记录
     user_checkin_data = UserCheckinData.query.filter_by(username=username).first()
     if user_checkin_data is None:
         return "User's checkin data not found"
     # 如果今天晚6点以后打卡过了，就不打了
     if user_checkin_data.last_checkin_time.hour >= 18 and user_checkin_data.last_checkin_time.day == datetime.now().day:
-        return "OK"
+        return "Already Checked OK"
     # 开始打卡
     ua = {
         "User-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36"}
@@ -86,8 +86,11 @@ def checkin(username, password, email, is_admin):
     all_scripts = soup.find_all('script')
     full_script = ""
     for script in all_scripts:
-        if '表格集合' in script.text[:18]:
-            full_script = script.text
+        if script.string is None:
+            continue
+        if '表格集合' in script.string[:18]:
+            full_script = script.string
+            break
     scripts = full_script.split('\n')
     try:
         wid_line, uid_line = scripts[7], scripts[10]
@@ -95,7 +98,7 @@ def checkin(username, password, email, is_admin):
         wid = re.findall(data_pattern, wid_line)[0]
         uid = re.findall(data_pattern, uid_line)[0]
     except IndexError:
-        return "Checkin failed on getting wid and uid"
+        return "Checkin failed on getting wid and uid, detail script:\n"+full_script
     # 计算最终的API入口
     api_url = "http://form.hhu.edu.cn/pdc/formDesignApi/dataFormSave?wid=%s&userId=%s" % (wid, uid)
     # 读取历史填报信息
@@ -125,5 +128,6 @@ def auto_checkin():
     自动打卡任务
     :return:
     """
+    print("start auto checkin")
     for user in User.query:
         checkin(user.username, user.password, user.email, user.is_admin)

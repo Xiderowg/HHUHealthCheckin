@@ -14,3 +14,7 @@ apispec-webframeworks
 tox
 celery[redis]
 gunicorn
+requests
+beautifulsoup4
+pyodbc
+lxml

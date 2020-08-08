@@ -10,11 +10,11 @@
 				<text class="title">密 码：</text>
 				<m-input type="password" displayable v-model="password" placeholder="请输入密码"></m-input>
 			</view>
-			<view class="input-row">
+<!-- 			<view class="input-row">
 				<text class="title">验证码：</text>
 				<m-input class="m-input" type="text" v-model="usercode" placeholder="请输入验证码"></m-input>
 				<valid-code v-model="validcode" :refresh="refreshcode" />
-			</view>
+			</view> -->
 		</view>
 		<view class="btn-row">
 			<button type="primary" class="primary" @tap="bindLogin">登录</button>

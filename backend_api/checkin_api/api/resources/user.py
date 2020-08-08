@@ -101,4 +101,4 @@ class CreateUserResource(Resource):
         db.session.add(checkin_data)
         db.session.commit()
 
-        return {'msg': 'user created', "user": schema.dump(user)}, 201
+        return {'msg': 'user created', "user": schema.dump(user)}, 200
