@@ -8,7 +8,7 @@ class UserCheckinDataSchema(ma.SQLAlchemyAutoSchema):
     """
     id = ma.Int(dump_only=True)
     username = ma.String(required=True)
-    last_checkin_time = ma.DateTime(load_only=False, required=True)
+    last_checkin_time = ma.DateTime(load_only=False, required=True, format='%Y/%m/%d %H:%M:%S')
     total_checkin_count = ma.Integer(load_only=False, required=True)
     total_fail_count = ma.Integer(load_only=False, required=True)
 
