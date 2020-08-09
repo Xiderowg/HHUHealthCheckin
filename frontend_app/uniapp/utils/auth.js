@@ -55,7 +55,7 @@ const readInfo = function() {
 
 const updateInfo = function(data) {
 	return new Promise((resolve, reject) => {
-		http.post("/users", data, {
+		http.put("/users", data, {
 				custom: {
 					auth: true
 				}

@@ -64,5 +64,9 @@
     },
     "mp-toutiao" : {
         "usingComponents" : true
+    },
+    "h5" : {
+        "title" : "可每打卡",
+        "domain" : "https://api.edlinus.cn/checkin_h5"
     }
 }

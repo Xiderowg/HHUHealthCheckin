@@ -19,8 +19,11 @@
 				<view class="normal_height">成功打卡次数： {{successCount}}</view>
 				<view class="normal_height">失败打卡次数： {{failCount}}</view>
 			</view>
+			<view class="btn-row">
+				<button type="primary" class="primary" @tap="updateData">刷新数据</button>
+			</view>
 		</view>
-		<view v-if="!hasLogin" class="hello">
+		<view v-else class="hello">
 			<view class="title">
 				您好 游客。
 			</view>
@@ -39,7 +42,7 @@
 	var _self;
 
 	export default {
-		onLoad() {
+		mounted() {
 			_self = this;
 			this.cWidth3 = uni.upx2px(350);
 			this.cHeight3 = uni.upx2px(350);
@@ -72,14 +75,7 @@
 				});
 			} else {
 				// 用户已经登录了
-				loadCheckinData().then(res => {
-					this.lastCheckin = new Date(res.last_checkin_time);
-					this.totalCount = res.total_checkin_count;
-					this.failCount = res.total_fail_count;
-					this.fillData();
-				}).catch(err => {
-					console.log("加载打卡数据失败L")
-				});
+				this.updateData()
 			}
 		},
 		data() {
@@ -108,6 +104,16 @@
 			}
 		},
 		methods: {
+			updateData(){
+				loadCheckinData().then(res => {
+					this.lastCheckin = new Date(res.last_checkin_time);
+					this.totalCount = res.total_checkin_count;
+					this.failCount = res.total_fail_count;
+					this.fillData();
+				}).catch(err => {
+					console.log("加载打卡数据失败")
+				});
+			},
 			fillData(){
 				let Arcbar1 = {
 					series: [{color:"#2fc25b",data:this.successRatio,name:"打卡成功率"}]
@@ -202,7 +208,7 @@
 	}
 
 	.chart {
-		width: 800rpx;
+		width: 100%;
 		height: 350rpx;
 		background-color: #FFFFFF;
 		position: relative;
@@ -234,5 +240,9 @@
 	}
 	.normal_height{
 		line-height: 150%;
+	}
+	.btn-row {
+		margin-top: 10px;
+		padding: 10px;
 	}
 </style>

@@ -98,7 +98,7 @@ def checkin(username, password, email, is_admin):
         wid = re.findall(data_pattern, wid_line)[0]
         uid = re.findall(data_pattern, uid_line)[0]
     except IndexError:
-        return "Checkin failed on getting wid and uid, detail script:\n"+full_script
+        return "Checkin failed on getting wid and uid, detail script:\n" + full_script
     # 计算最终的API入口
     api_url = "http://form.hhu.edu.cn/pdc/formDesignApi/dataFormSave?wid=%s&userId=%s" % (wid, uid)
     # 读取历史填报信息
@@ -128,6 +128,7 @@ def auto_checkin():
     自动打卡任务
     :return:
     """
-    print("start auto checkin")
-    for user in User.query:
-        checkin(user.username, user.password, user.email, user.is_admin)
+    if datetime.now().minute > 0:
+        print("start auto checkin")
+        for user in User.query:
+            checkin(user.username, user.password, user.email, user.is_admin)

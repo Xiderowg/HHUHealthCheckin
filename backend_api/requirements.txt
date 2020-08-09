@@ -12,7 +12,7 @@ passlib
 apispec[yaml]
 apispec-webframeworks
 tox
-celery[redis]
+celery[librabbitmq,redis]
 gunicorn
 requests
 beautifulsoup4

@@ -46,13 +46,13 @@ http.interceptors.response.use((response) => { /* 请求之后拦截器 */
 			title: "您没有权限进行此项操作",
 			icon: "none"
 		});
-	} else if (response.statusCode == 500 || response.statusCode == 400) {
+	} else if (response.statusCode == 500) {
 		uni.showToast({
 			title: "服务器开小差了，请稍后再试或联系QQ609741313反馈问题",
 			icon: "none"
 		})
 	}
-	return response
+	return Promise.reject("response");
 })
 
 export {

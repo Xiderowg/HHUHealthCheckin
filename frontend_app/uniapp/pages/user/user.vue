@@ -20,7 +20,7 @@
 				<valid-code v-model="validcode" :refresh="refreshcode" />
 			</view>
 			<view class="btn-row" style="margin-top: 0;">
-				<button type="primary" class="primary" @tap="userUpdate">更新信息</button>
+				<button type="default" @tap="userUpdate">更新信息</button>
 			</view>
 		</view>
 		<view class="btn-row" style="margin-top: 10rpx;">
@@ -165,6 +165,7 @@
 						title: '用户信息更新失败'
 					});
 				});
+				this.refreshCode = Math.random();
 			}
 		}
 	}

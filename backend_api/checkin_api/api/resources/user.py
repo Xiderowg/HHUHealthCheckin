@@ -94,7 +94,7 @@ class CreateUserResource(Resource):
 
         data_schema = UserCheckinDataSchema()
         checkin_data = data_schema.load(
-            {"username": user.username, "last_checkin_time": '1990-01-01 08:00:00',
+            {"username": user.username, "last_checkin_time": '1990/01/01 08:00:00',
              "total_checkin_count": 0, "total_fail_count": 0})
 
         db.session.add(user)

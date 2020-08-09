@@ -6,11 +6,7 @@ import os
 from dotenv import load_dotenv
 import sys
 
-gettrace = getattr(sys, 'gettrace', None)
-if gettrace is None:
-    load_dotenv(".flaskenv")
-else:
-    load_dotenv(".testenv")
+load_dotenv(".flaskenv")
 
 ENV = os.getenv("FLASK_ENV")
 DEBUG = ENV == "development"

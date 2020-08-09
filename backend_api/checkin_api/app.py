@@ -75,7 +75,7 @@ def init_celery(app=None):
         beat_schedule={
             "auto_checkin": {
                 "task": "checkin_api.tasks.checkin.auto_checkin",
-                "schedule": crontab(minute='*/10,5-59', hour="18-20"),
+                "schedule": crontab(minute='*/10', hour="18-20"),
                 "args": ()
             },
         }
