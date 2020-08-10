@@ -25,7 +25,7 @@
 			</view>
 		</view>
 		<view v-else class="hello">
-			<view class="title">
+			<view>
 				您好 游客，请登录查看更多信息。
 			</view>
 		</view>

@@ -1,6 +1,7 @@
 from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from datetime import datetime
 from checkin_api.api.schemas import UserSchema, UserCheckinDataSchema
 from checkin_api.models import User, UserCheckinData
 from checkin_api.extensions import db
@@ -46,10 +47,10 @@ class AdminUserResource(Resource):
     def put(self, user_id):
         schema = UserSchema(partial=True)
         user = User.query.get_or_404(user_id)
-        old_name=user.username
+        old_name = user.username
         user = schema.load(request.json, instance=user)
-        if user.username!=old_name:
-            user.username=old_name
+        if user.username != old_name:
+            user.username = old_name
         db.session.commit()
 
         return {"msg": "user updated", "user": schema.dump(user)}
@@ -92,12 +93,18 @@ class CreateUserResource(Resource):
         if tmp:
             return {'msg': 'username was taken'}, 403
 
-        data_schema = UserCheckinDataSchema()
-        checkin_data = data_schema.load(
-            {"username": user.username, "last_checkin_time": '1990/01/01 08:00:00',
-             "total_checkin_count": 0, "total_fail_count": 0})
-
         db.session.add(user)
+        db.session.flush()
+        # data_schema = UserCheckinDataSchema()
+        # checkin_data = data_schema.load(
+        #     {"username": user.username, "last_checkin_time": '1990/01/01 08:00:00',
+        #      "total_checkin_count": 0, "total_fail_count": 0})
+        checkin_data = UserCheckinData(user=user)
+        checkin_data.username = user.username
+        checkin_data.last_checkin_time = datetime(2000, 1, 1)
+        checkin_data.total_checkin_count = 0
+        checkin_data.total_fail_count = 0
+
         db.session.add(checkin_data)
         db.session.commit()
 
