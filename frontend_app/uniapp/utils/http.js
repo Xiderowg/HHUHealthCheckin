@@ -30,16 +30,41 @@ http.interceptors.request.use((config) => {
 	return Promise.reject(config);
 })
 
-http.interceptors.response.use((response) => { /* 请求之后拦截器 */
-	console.log(response);
+http.interceptors.response.use(async (response) => { /* 请求之后拦截器 */
+	// console.log(response);
 	if (response.config.custom.loading) {
-		uni.hideLoading()
+		uni.hideLoading();
 	}
 	return response;
-}, (response) => {
+}, async (response) => {
 	// 请求错误做点什么
 	if (response.config.custom.loading) {
 		uni.hideLoading()
+	}
+	// token过期情况
+	if (response.config.custom.auth) {
+		if (response.statusCode == 401) {
+			// 用refreshToken重新刷新
+			var refreshToken = jwt.getRefreshToken();
+			if (refreshToken !== '') {
+				let oldConfig = JSON.parse(JSON.stringify(response.config));
+				response.config.header.Authorization = refreshToken;
+				response.config.url = "/auth/refresh";
+				response.config.method = 'POST';
+				response.config.custom.auth = false;
+				// 更新accessToken
+				let refreshResponse = await http.request(response.config);
+				if (refreshResponse.statusCode == 200) {
+					// 更新accessToken，重新请求
+					jwt.setAccessToken(refreshResponse.data.access_token);
+					let repeatRes = await http.request(oldConfig);
+					if (repeatRes) {
+						response = repeatRes;
+						return Promise.resolve(response);
+					}
+				}
+			}
+		}
 	}
 	if (response.statusCode == 403) {
 		uni.showToast({
@@ -48,11 +73,11 @@ http.interceptors.response.use((response) => { /* 请求之后拦截器 */
 		});
 	} else if (response.statusCode == 500) {
 		uni.showToast({
-			title: "服务器开小差了，请稍后再试或联系QQ609741313反馈问题",
+			title: "服务器开小差了，请稍后再试或发邮件至xiderowg@foxmail.com反馈问题",
 			icon: "none"
 		})
 	}
-	return Promise.reject("response");
+	return Promise.reject(response);
 })
 
 export {

@@ -7,7 +7,7 @@ from flask_restful import Api
 from marshmallow import ValidationError
 from checkin_api.extensions import apispec
 from checkin_api.api.resources import AdminUserResource, AdminUserList, UserCheckinDataResource, CreateUserResource, \
-    AdminCheckinResource, CheckinResource, AdminUserCheckinDataResource, UserResource
+    AdminCheckinResource, CheckinResource, AdminUserCheckinDataResource, UserResource, NoticeResource
 from checkin_api.api.schemas import UserSchema, UserCheckinDataSchema
 
 blueprint = Blueprint("api", __name__, url_prefix="")
@@ -21,6 +21,7 @@ api.add_resource(AdminUserCheckinDataResource, "/users/data/<int:user_id>", endp
 api.add_resource(CreateUserResource, "/users/create", endpoint="create_user")
 api.add_resource(AdminCheckinResource, "/checkin/all", endpoint="checkin_all")
 api.add_resource(CheckinResource, "/checkin", endpoint="checkin_user")
+api.add_resource(NoticeResource, "/notice", endpoint="get_notice")
 
 
 @blueprint.before_app_first_request
@@ -38,6 +39,7 @@ def register_views():
     apispec.spec.path(view=CreateUserResource, app=current_app)
     apispec.spec.path(view=AdminCheckinResource, app=current_app)
     apispec.spec.path(view=CheckinResource, app=current_app)
+    apispec.spec.path(view=NoticeResource, app=current_app)
 
 
 @blueprint.errorhandler(ValidationError)

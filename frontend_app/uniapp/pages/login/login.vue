@@ -95,7 +95,7 @@
 					return;
 				}
 				// 检查验证码
-				if (String.prototype.toUpperCase(this.usercode) !== String.prototype.toUpperCase(this.validcode)) {
+				if (this.usercode.toUpperCase() !== this.validcode.toUpperCase()) {
 					uni.showToast({
 						icon: 'none',
 						title: '验证码不正确，请检查'

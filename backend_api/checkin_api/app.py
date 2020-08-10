@@ -1,8 +1,8 @@
 from flask import Flask
-from flask_cors import CORS
+
 from celery.schedules import crontab
 from checkin_api import auth, api
-from checkin_api.extensions import db, jwt, migrate, apispec, celery
+from checkin_api.extensions import db, jwt, migrate, apispec, celery, cors
 from checkin_api.tasks.checkin import auto_checkin
 
 
@@ -11,7 +11,6 @@ def create_app(testing=False, cli=False):
     """
     app = Flask("checkin_api")
     app.config.from_object("checkin_api.config")
-    cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
     if testing is True:
         app.config["TESTING"] = True
@@ -29,6 +28,8 @@ def configure_extensions(app, cli):
     """
     db.init_app(app)
     jwt.init_app(app)
+
+    cors.init_app(app, resources={r"/*": {"origins": "*"}})
 
     if cli is True:
         migrate.init_app(app, db)
@@ -90,7 +91,6 @@ def init_celery(app=None):
 
     celery.Task = ContextTask
     return celery
-
 
 # @celery.on_after_configure.connect
 # def setup_periodic_tasks(sender, **kwargs):

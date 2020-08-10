@@ -41,7 +41,6 @@ const loadCheckinData = function() {
 			.then(res => {
 				resolve(res.data.checkin_data);
 			}).catch(err => {
-				debugger;
 				reject("获取打卡信息失败");
 			})
 	});

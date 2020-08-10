@@ -128,8 +128,10 @@ def refresh():
         401:
           description: unauthorized
     """
-    current_user = get_jwt_identity()
-    access_token = create_access_token(identity=current_user)
+    current_user_id = get_jwt_identity()
+    current_user = User.query.filter_by(id=current_user_id).first()
+    current_user_identity = UserIdentity(current_user_id, current_user.is_admin)
+    access_token = create_access_token(identity=current_user_identity)
     ret = {"access_token": access_token}
     add_token_to_database(access_token, app.config["JWT_IDENTITY_CLAIM"])
     return jsonify(ret), 200
@@ -160,8 +162,8 @@ def revoke_access_token():
           description: unauthorized
     """
     jti = get_raw_jwt()["jti"]
-    user_identity = get_jwt_identity()
-    revoke_token(jti, user_identity)
+    user_id = get_jwt_identity()
+    revoke_token(jti, user_id)
     return jsonify({"message": "token revoked"}), 200
 
 

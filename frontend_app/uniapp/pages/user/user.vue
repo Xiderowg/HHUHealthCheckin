@@ -1,6 +1,5 @@
 <template>
 	<view class="content" v-if="hasLogin">
-		<image class="image" mode="widthFix" src="../../static/img/logo.jpg" />
 		<view class="input-group">
 			<view class="input-row border">
 				<text class="title">邮箱：</text>
@@ -30,7 +29,7 @@
 		</view>
 	</view>
 	<view class="content" v-else>
-		<text>请登录后进行查看详细信息</text>
+		<view>请登录后进行查看详细信息</view>
 		<view class="btn-row">
 			<button v-if="!hasLogin" type="primary" class="primary" @tap="bindLogin">点我登录</button>
 		</view>
@@ -143,7 +142,7 @@
 					})
 				}
 				// 检查验证码
-				if (String.prototype.toUpperCase(this.usercode) != String.prototype.toUpperCase(this.validcode)) {
+				if (this.usercode.toUpperCase() !== this.validcode.toUpperCase()) {
 					uni.showToast({
 						icon: 'none',
 						title: '验证码不正确，请检查'

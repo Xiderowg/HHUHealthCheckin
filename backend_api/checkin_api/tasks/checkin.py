@@ -18,7 +18,7 @@ def _format_addr(s):
 
 
 @celery.task
-def sendmail(username, usermail):
+def send_mail(username, usermail):
     """
     发送邮件任务
     :param username:
@@ -36,10 +36,41 @@ def sendmail(username, usermail):
     # 构造邮件数据
     content = '【%s】已于【%s】打卡成功' % (username, datetime.now().strftime("%Y-%m-%d %H:%M"))
     message = MIMEText(content, 'plain', 'utf-8')
-    message['From'] = _format_addr('可彡每彳亍打卡平台 <api@edlinus.cn>')
+    message['From'] = _format_addr('可每打卡平台 <api@edlinus.cn>')
     message['To'] = _format_addr('%s <%s>' % (username, usermail))
 
-    subject = '【%s】打卡成功提醒' % datetime.now().strftime("%Y-%m-%d %H:%M")
+    subject = '【%s】打卡成功提醒' % datetime.now().strftime("%Y-%m-%d")
+    message['Subject'] = Header(subject, 'utf-8').encode()
+
+    try:
+        smtpObj = smtplib.SMTP_SSL(config.MAIL_SMTP_HOST, config.MAIL_SMTP_PORT)
+        smtpObj.login(config.MAIL_SMTP_USER, config.MAIL_SMTP_PASS)
+        smtpObj.sendmail(sender, receivers, message.as_string())
+        return "OK"
+    except smtplib.SMTPException:
+        return "FAILED"
+
+
+@celery.task
+def send_failmail(username, usermail):
+    """
+    打卡失败时发送失败邮件
+    """
+    sender = 'api@edlinus.cn'
+    # 验证邮箱是否是正确的
+    if not re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", usermail):
+        return "邮箱格式不合法"
+
+    # 收件人
+    receivers = [usermail]
+
+    # 构造邮件数据
+    content = '在【%s】尝试给【%s】打卡发生错误，建议手动进行打卡' % (username, datetime.now().strftime("%Y-%m-%d %H:%M"))
+    message = MIMEText(content, 'plain', 'utf-8')
+    message['From'] = _format_addr('可每打卡平台 <api@edlinus.cn>')
+    message['To'] = _format_addr('%s <%s>' % (username, usermail))
+
+    subject = '【%s】！！打卡失败！！提醒' % datetime.now().strftime("%Y-%m-%d")
     message['Subject'] = Header(subject, 'utf-8').encode()
 
     try:
@@ -71,7 +102,12 @@ def checkin(username, password, email, is_admin):
         "User-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36"}
     # 登录
     s = requests.session()
-    s.get("http://ids.hhu.edu.cn/amserver/UI/Login?goto=http://form.hhu.edu.cn/pdc/form/list", headers=ua)
+    try:
+        s.get("http://ids.hhu.edu.cn/amserver/UI/Login?goto=http://form.hhu.edu.cn/pdc/form/list", headers=ua,
+              timeout=10)
+    except requests.exceptions.RequestException:
+        send_failmail(username, email)
+        return "Timeout on getting initial cookie"
     pay_load = {"IDToken0": "", "IDToken1": username, "IDToken2": password, "IDButton": "Submit",
                 "goto": "aHR0cDovL2Zvcm0uaGh1LmVkdS5jbi9wZGMvZm9ybS9saXN0", "encoded": "true",
                 "inputCode": "", "gx_charset": "UTF-8"}
@@ -79,6 +115,7 @@ def checkin(username, password, email, is_admin):
     # 检查登录结果
     cookies = s.cookies.get_dict()
     if "iPlanetDirectoryPro" not in cookies.keys():
+        send_failmail(username, email)
         return "Checkin failed because of wrong username or password"
     # 获取wid和uid
     res = s.get("http://form.hhu.edu.cn/pdc/formDesignApi/S/xznuPIjG", headers=ua)
@@ -86,10 +123,11 @@ def checkin(username, password, email, is_admin):
     all_scripts = soup.find_all('script')
     full_script = ""
     for script in all_scripts:
-        if script.string is None:
+        tmp_script = script.string
+        if tmp_script is None or len(tmp_script) < 18:
             continue
-        if '表格集合' in script.string[:18]:
-            full_script = script.string
+        if '表格集合' in tmp_script[:18]:
+            full_script = tmp_script
             break
     scripts = full_script.split('\n')
     try:
@@ -98,27 +136,37 @@ def checkin(username, password, email, is_admin):
         wid = re.findall(data_pattern, wid_line)[0]
         uid = re.findall(data_pattern, uid_line)[0]
     except IndexError:
-        return "Checkin failed on getting wid and uid, detail script:\n" + full_script
+        send_failmail(username, email)
+        return "Checkin failed on getting wid and uid, detailed script:\n" + full_script
     # 计算最终的API入口
     api_url = "http://form.hhu.edu.cn/pdc/formDesignApi/dataFormSave?wid=%s&userId=%s" % (wid, uid)
     # 读取历史填报信息
-    fill_data_line = scripts[120][25:-1:1]
-    fill_data = json.loads(fill_data_line)[0]
-    del fill_data["CLRQ"]
-    del fill_data["USERID"]
+    try:
+        fill_data_line = scripts[120][25:-1:1]
+        fill_data = json.loads(fill_data_line)[0]
+        del fill_data["CLRQ"]
+        del fill_data["USERID"]
+    except IndexError:
+        send_failmail(username, email)
+        return "Checkin failed on getting historical data, detailed script:\n" + full_script
     checkin_data = fill_data
     checkin_data["DATETIME_CYCLE"] = datetime.now().strftime("%Y/%m/%d")
     # 打卡
-    res = s.post(api_url, checkin_data)
+    try:
+        res = s.post(api_url, checkin_data, timeout=10)
+    except requests.exceptions.RequestException:
+        send_failmail(username, email)
+        return "Checkin failed on posting message to server"
     if res.status_code == 200:
         user_checkin_data.last_checkin_time = datetime.now()
         user_checkin_data.total_checkin_count += 1
         db.session.commit()
-        sendmail(username, email)
+        send_mail(username, email)
         return "OK"
     else:
         user_checkin_data.total_fail_count += 1
         db.session.commit()
+        send_failmail(username, email)
         return "Checkin failed on last procedure"
 
 

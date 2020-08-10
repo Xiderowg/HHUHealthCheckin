@@ -1,7 +1,7 @@
 import pytest
 
 from checkin_api.app import init_celery
-from checkin_api.tasks.checkin import checkin, sendmail
+from checkin_api.tasks.checkin import checkin, send_mail
 
 
 @pytest.fixture(scope="session")
@@ -20,7 +20,7 @@ def celery_worker_pool():
 
 
 def test_email(celery_session_app, celery_session_worker, test_user):
-    res = sendmail.delay(test_user.username, test_user.email)
+    res = send_mail.delay(test_user.username, test_user.email)
     assert res.get() == "OK"
 
 

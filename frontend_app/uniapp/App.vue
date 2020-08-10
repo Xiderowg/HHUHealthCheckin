@@ -135,4 +135,29 @@
 	.uni-page-head{
 		background-color: rgb(0, 122, 255)!important;
 	}
+	
+	.qiun-bg-white {
+		background: #FFFFFF;
+	}
+	
+	.qiun-title-bar {
+		width: 96%;
+		padding: 15rpx 2%;
+		flex-wrap: nowrap;
+	}
+	
+	.qiun-common-mt {
+		margin-top: 20rpx;
+	}
+	
+	.qiun-title-dot-light {
+		border-left: 10rpx solid #0ea391;
+		padding-left: 10rpx;
+		font-size: 32rpx;
+		color: #000000
+	}
+	
+	.normal_height {
+		line-height: 150%;
+	}
 </style>

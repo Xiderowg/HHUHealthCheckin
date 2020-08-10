@@ -8,9 +8,12 @@ const login = function(data) {
 	return new Promise((resolve, reject) => {
 		var response = http.post('/auth/login', data)
 			.then(res => {
+				// debugger;
 				jwt.setAccessToken(res.data.access_token);
+				jwt.setRefreshToken(res.data.refresh_token);
 				resolve();
 			}).catch(err => {
+				// debugger;
 				reject("登录失败");
 			})
 	});
@@ -20,7 +23,7 @@ const register = function(data) {
 	return new Promise((resolve, reject) => {
 		var response = http.post('/users/create', data)
 			.then(res => {
-				console.log(res.data)
+				// console.log(res.data);
 				resolve();
 			}).catch(err => {
 				debugger;
@@ -31,19 +34,20 @@ const register = function(data) {
 
 const readInfo = function() {
 	return new Promise((resolve, reject) => {
-		console.log(jwt.getAccessToken());
+		// console.log(jwt.getAccessToken());
 		var response = http.get('/users', {
 				custom: {
 					auth: true
 				}
 			})
 			.then(res => {
-				console.log(res);
+				// console.log(res);
 				// 请求成功则返回用户是否为管理员以及用户的id
 				resolve({
 					is_admin: res.data.user.is_admin,
 					id: res.data.user.id,
-					email: res.data.user.email
+					email: res.data.user.email,
+					username: res.data.user.username
 				});
 			}).catch(err => {
 				debugger;
@@ -68,10 +72,21 @@ const updateInfo = function(data) {
 	});
 }
 
+const readNotice = function(data) {
+	return new Promise((resolve, reject) => {
+		http.get("/notice").then(res => {
+			resolve(res.data.msg);
+		}).catch(err => {
+			reject("获取公告信息失败");
+		});
+	});
+}
+
 
 export {
 	login,
 	readInfo,
 	updateInfo,
-	register
+	register,
+	readNotice
 }

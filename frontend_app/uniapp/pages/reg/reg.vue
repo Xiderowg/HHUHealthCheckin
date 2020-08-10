@@ -1,5 +1,7 @@
 <template>
 	<view class="content">
+		<uni-notice-bar showIcon="true" text="使用信息门户的学号和密码进行注册，邮箱请使用常用邮箱。注册完毕后每日服务器会定时定点为您打卡并发送邮件，请注意查收，若未收到邮件，请尝试手动打卡。"></uni-notice-bar>
+		<image class="image" mode="widthFix" src="../../static/img/logo.jpg" />
 		<view class="input-group">
 			<view class="input-row border">
 				<text class="title">账号：</text>
@@ -16,7 +18,7 @@
 			<view class="input-row">
 				<text class="title">验证码：</text>
 				<m-input class="m-input" type="text" v-model="usercode" placeholder="请输入验证码"></m-input>
-				<valid-code v-on:validCodeUpdate="validCodeUpdate" :refresh="refreshcode" />
+				<valid-code v-model="validcode" :refresh="refreshcode" />
 			</view>
 		</view>
 		<view class="btn-row">
@@ -29,6 +31,7 @@
 	// import service from '../../service.js';
 	import mInput from '../../components/m-input.vue';
 	import validCode from '../../components/valid-code.vue'
+	import uniNoticeBar from '../../components/uni-notice-bar/uni-notice-bar.vue'
 	import {
 		register
 	} from '../../utils/auth.js';
@@ -36,7 +39,8 @@
 	export default {
 		components: {
 			mInput,
-			validCode
+			validCode,
+			uniNoticeBar
 		},
 		data() {
 			return {
@@ -47,6 +51,13 @@
 				validcode: '',
 				refreshcode: 0
 			}
+		},
+		mounted() {
+			uni.showModal({
+				title: '免责声明',
+				content: '我不能保证打卡程序的高可用性，因此存在打不上卡的风险。您在注册账号以后，由于未打卡而造成的任何后果，我对此不负任何责任，3000字检讨和我莫得关系，望悉知。',
+				showCancel: false
+			});
 		},
 		methods: {
 			register() {
@@ -65,7 +76,8 @@
 					uni.showToast({
 						icon: 'none',
 						title: '账号只可由数字组成，即你的学号'
-					})
+					});
+					return;
 				}
 				if (this.password.length < 3) {
 					uni.showToast({
@@ -75,7 +87,7 @@
 					return;
 				}
 				// 检查验证码
-				if (String.prototype.toUpperCase(this.usercode) != String.prototype.toUpperCase(this.validcode)) {
+				if (this.usercode.toUpperCase() !== this.validcode.toUpperCase()) {
 					uni.showToast({
 						icon: 'none',
 						title: '验证码不正确，请检查'
@@ -90,7 +102,6 @@
 					});
 					return;
 				}
-
 				const data = {
 					username: this.username,
 					password: this.password,
@@ -105,7 +116,6 @@
 						delta: 1
 					});
 				}).catch(err => {
-					debugger;
 					uni.showToast({
 						title: '注册失败，用户名已经被注册。'
 					});
@@ -118,5 +128,8 @@
 </script>
 
 <style>
-
+	.image {
+		margin: 0;
+		width: 100%;
+	}
 </style>
