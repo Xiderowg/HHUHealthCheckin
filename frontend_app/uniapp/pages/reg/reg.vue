@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<uni-notice-bar showIcon="true" text="使用信息门户的学号和密码进行注册，邮箱请使用常用邮箱。注册完毕后每日服务器会定时定点为您打卡并发送邮件，请注意查收，若未收到邮件，请尝试手动打卡。"></uni-notice-bar>
+		<uni-notice-bar showIcon="true" text="使用信息门户的学号和密码进行注册，邮箱请使用常用邮箱，一个邮箱对应一个用户，用户名不可修改，如果您在注册邮箱时填错了用户名，请等待3日后系统自动销号再重新注册。注册完毕后每日服务器会定时定点为您打卡并发送邮件，请注意查收，若未收到邮件，请尝试手动打卡。"></uni-notice-bar>
 		<image class="image" mode="widthFix" src="../../static/img/logo.jpg" />
 		<view class="input-group">
 			<view class="input-row border">
@@ -10,6 +10,10 @@
 			<view class="input-row border">
 				<text class="title">密码：</text>
 				<m-input type="password" displayable v-model="password" placeholder="请输入密码"></m-input>
+			</view>
+			<view class="input-row border">
+				<text class="title">重复：</text>
+				<m-input type="password" displayable v-model="passwordConfirm" placeholder="请再次输入密码"></m-input>
 			</view>
 			<view class="input-row">
 				<text class="title">邮箱：</text>
@@ -46,6 +50,7 @@
 			return {
 				username: '',
 				password: '',
+				passwordConfirm: '',
 				email: '',
 				usercode: '',
 				validcode: '',
@@ -86,6 +91,13 @@
 					});
 					return;
 				}
+				if (this.passwordConfirm !== this.password) {
+					uni.showToast({
+						icon: 'none',
+						title: '两次输入密码不一致，请检查'
+					})
+					return;
+				}
 				// 检查验证码
 				if (this.usercode.toUpperCase() !== this.validcode.toUpperCase()) {
 					uni.showToast({
@@ -110,6 +122,7 @@
 				// service.addUser(data);
 				register(data).then(res => {
 					uni.showToast({
+						icon: 'none',
 						title: '注册成功，即将返回'
 					});
 					uni.navigateBack({
@@ -117,8 +130,11 @@
 					});
 				}).catch(err => {
 					uni.showToast({
-						title: '注册失败，用户名已经被注册。'
+						icon: 'none',
+						title: '注册失败，用户名或邮箱已经被注册。',
+						duration: 3000
 					});
+					this.refreshCode = Math.random();
 				})
 
 

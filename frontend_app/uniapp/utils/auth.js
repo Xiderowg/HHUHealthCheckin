@@ -82,11 +82,33 @@ const readNotice = function(data) {
 	});
 }
 
+const resetPassword = function(data) {
+	return new Promise((resolve, reject) => {
+		http.post("/users/reset", data).then(res => {
+			resolve(res);
+		}).catch(err => {
+			reject(err);
+		})
+	});
+};
+
+const removeInactiveUser = function() {
+	return new Promise((resolve, reject) => {
+		http.delete("/users/inactive").then(res => {
+			resolve(res);
+		}).catch(err => {
+			reject(err);
+		})
+	})
+}
+
 
 export {
 	login,
 	readInfo,
 	updateInfo,
 	register,
-	readNotice
+	resetPassword,
+	readNotice,
+	removeInactiveUser
 }

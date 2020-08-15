@@ -4,6 +4,7 @@ from celery.schedules import crontab
 from checkin_api import auth, api
 from checkin_api.extensions import db, jwt, migrate, apispec, celery, cors
 from checkin_api.tasks.checkin import auto_checkin
+from checkin_api.tasks.user_manage import clean_users
 
 
 def create_app(testing=False, cli=False):
@@ -69,7 +70,8 @@ def init_celery(app=None):
     celery.conf.update(app.config)
 
     # 自动签到打卡
-    celery.conf.imports = celery.conf.imports + ("checkin_api.tasks.checkin",)
+    celery.conf.imports = celery.conf.imports + (
+        "checkin_api.tasks.checkin", "checkin_api.tasks.mail", "checkin_api.tasks.user_manage",)
     celery.conf.update(
         timezone='Asia/Shanghai',
         enable_utc=True,
@@ -79,6 +81,11 @@ def init_celery(app=None):
                 "schedule": crontab(minute='*/10', hour="18-20"),
                 "args": ()
             },
+            "auto_clean": {
+                "task": "checkin_api.tasks.checkin.clean_users",
+                "schedule": crontab(minute='0', hour='21'),
+                "args": ()
+            }
         }
     )
 

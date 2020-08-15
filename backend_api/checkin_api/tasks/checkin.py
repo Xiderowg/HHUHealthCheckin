@@ -3,83 +3,9 @@ import json
 import requests
 from datetime import datetime
 from bs4 import BeautifulSoup
-import smtplib
-from email.mime.text import MIMEText
-from email.header import Header
-from email.utils import parseaddr, formataddr
-from checkin_api import config
 from checkin_api.extensions import celery, db
 from checkin_api.models import User, UserCheckinData
-
-
-def _format_addr(s):
-    name, addr = parseaddr(s)
-    return formataddr((Header(name, 'utf-8').encode(), addr))
-
-
-@celery.task
-def send_mail(username, usermail):
-    """
-    发送邮件任务
-    :param username:
-    :param usermail
-    :return:
-    """
-    sender = 'api@edlinus.cn'
-    # 验证邮箱是否是正确的
-    if not re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", usermail):
-        return "邮箱格式不合法"
-
-    # 收件人
-    receivers = [usermail]
-
-    # 构造邮件数据
-    content = '【%s】已于【%s】打卡成功' % (username, datetime.now().strftime("%Y-%m-%d %H:%M"))
-    message = MIMEText(content, 'plain', 'utf-8')
-    message['From'] = _format_addr('可每打卡平台 <api@edlinus.cn>')
-    message['To'] = _format_addr('%s <%s>' % (username, usermail))
-
-    subject = '【%s】打卡成功提醒' % datetime.now().strftime("%Y-%m-%d")
-    message['Subject'] = Header(subject, 'utf-8').encode()
-
-    try:
-        smtpObj = smtplib.SMTP_SSL(config.MAIL_SMTP_HOST, config.MAIL_SMTP_PORT)
-        smtpObj.login(config.MAIL_SMTP_USER, config.MAIL_SMTP_PASS)
-        smtpObj.sendmail(sender, receivers, message.as_string())
-        return "OK"
-    except smtplib.SMTPException:
-        return "FAILED"
-
-
-@celery.task
-def send_failmail(username, usermail):
-    """
-    打卡失败时发送失败邮件
-    """
-    sender = 'api@edlinus.cn'
-    # 验证邮箱是否是正确的
-    if not re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", usermail):
-        return "邮箱格式不合法"
-
-    # 收件人
-    receivers = [usermail]
-
-    # 构造邮件数据
-    content = '在【%s】尝试给【%s】打卡发生错误，建议手动进行打卡' % (username, datetime.now().strftime("%Y-%m-%d %H:%M"))
-    message = MIMEText(content, 'plain', 'utf-8')
-    message['From'] = _format_addr('可每打卡平台 <api@edlinus.cn>')
-    message['To'] = _format_addr('%s <%s>' % (username, usermail))
-
-    subject = '【%s】！！打卡失败！！提醒' % datetime.now().strftime("%Y-%m-%d")
-    message['Subject'] = Header(subject, 'utf-8').encode()
-
-    try:
-        smtpObj = smtplib.SMTP_SSL(config.MAIL_SMTP_HOST, config.MAIL_SMTP_PORT)
-        smtpObj.login(config.MAIL_SMTP_USER, config.MAIL_SMTP_PASS)
-        smtpObj.sendmail(sender, receivers, message.as_string())
-        return "OK"
-    except smtplib.SMTPException:
-        return "FAILED"
+from checkin_api.tasks.mail import send_fail_mail, send_success_mail
 
 
 @celery.task
@@ -106,7 +32,7 @@ def checkin(username, password, email, is_admin):
         s.get("http://ids.hhu.edu.cn/amserver/UI/Login?goto=http://form.hhu.edu.cn/pdc/form/list", headers=ua,
               timeout=10)
     except requests.exceptions.RequestException:
-        send_failmail(username, email)
+        # send_fail_mail(username, email)
         return "Timeout on getting initial cookie"
     pay_load = {"IDToken0": "", "IDToken1": username, "IDToken2": password, "IDButton": "Submit",
                 "goto": "aHR0cDovL2Zvcm0uaGh1LmVkdS5jbi9wZGMvZm9ybS9saXN0", "encoded": "true",
@@ -115,7 +41,7 @@ def checkin(username, password, email, is_admin):
     # 检查登录结果
     cookies = s.cookies.get_dict()
     if "iPlanetDirectoryPro" not in cookies.keys():
-        send_failmail(username, email)
+        # send_failmail(username, email)
         return "Checkin failed because of wrong username or password"
     # 获取wid和uid
     res = s.get("http://form.hhu.edu.cn/pdc/formDesignApi/S/xznuPIjG", headers=ua)
@@ -136,7 +62,7 @@ def checkin(username, password, email, is_admin):
         wid = re.findall(data_pattern, wid_line)[0]
         uid = re.findall(data_pattern, uid_line)[0]
     except IndexError:
-        send_failmail(username, email)
+        # send_failmail(username, email)
         return "Checkin failed on getting wid and uid, detailed script:\n" + full_script
     # 计算最终的API入口
     api_url = "http://form.hhu.edu.cn/pdc/formDesignApi/dataFormSave?wid=%s&userId=%s" % (wid, uid)
@@ -147,7 +73,7 @@ def checkin(username, password, email, is_admin):
         del fill_data["CLRQ"]
         del fill_data["USERID"]
     except IndexError:
-        send_failmail(username, email)
+        # send_failmail(username, email)
         return "Checkin failed on getting historical data, detailed script:\n" + full_script
     checkin_data = fill_data
     checkin_data["DATETIME_CYCLE"] = datetime.now().strftime("%Y/%m/%d")
@@ -155,18 +81,18 @@ def checkin(username, password, email, is_admin):
     try:
         res = s.post(api_url, checkin_data, timeout=10)
     except requests.exceptions.RequestException:
-        send_failmail(username, email)
+        # send_failmail(username, email)
         return "Checkin failed on posting message to server"
     if res.status_code == 200:
         user_checkin_data.last_checkin_time = datetime.now()
         user_checkin_data.total_checkin_count += 1
         db.session.commit()
-        send_mail(username, email)
+        send_success_mail(username, email)
         return "OK"
     else:
         user_checkin_data.total_fail_count += 1
         db.session.commit()
-        send_failmail(username, email)
+        # send_failmail(username, email)
         return "Checkin failed on last procedure"
 
 

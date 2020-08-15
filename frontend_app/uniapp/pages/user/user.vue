@@ -25,6 +25,7 @@
 		<view class="btn-row" style="margin-top: 10rpx;">
 			<button type="primary" class="primary" @tap="userCheckin">手动签到</button>
 			<button v-if="isAdmin" type="default" @tap="adminCheckin">全员签到</button>
+			<button v-if="isAdmin" type="default" @tap="adminCheckin">清理用户</button>
 			<button type="default" @tap="bindLogout">退出登录</button>
 		</view>
 	</view>
@@ -42,7 +43,8 @@
 		userCheckin
 	} from '../../utils/checkin.js'
 	import {
-		updateInfo
+		updateInfo,
+		removeInactiveUser
 	} from '../../utils/auth.js'
 	import {
 		mapState,
@@ -88,6 +90,17 @@
 						url: '../login/login',
 					});
 				}
+			},
+			removeInactiveUser(){
+				/**
+				 * 清理打卡失败用户
+				 */
+				removeInactiveUser().then(res=>{
+					uni.showToast({
+						icon:'none',
+						title:'用户清理成功'
+					})
+				})
 			},
 			adminCheckin() {
 				/**
