@@ -25,7 +25,7 @@
 		<view class="btn-row" style="margin-top: 10rpx;">
 			<button type="primary" class="primary" @tap="userCheckin">手动签到</button>
 			<button v-if="isAdmin" type="default" @tap="adminCheckin">全员签到</button>
-			<button v-if="isAdmin" type="default" @tap="adminCheckin">清理用户</button>
+			<button v-if="isAdmin" type="default" @tap="removeInactiveUser">清理用户</button>
 			<button type="default" @tap="bindLogout">退出登录</button>
 		</view>
 	</view>

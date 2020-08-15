@@ -94,7 +94,11 @@ const resetPassword = function(data) {
 
 const removeInactiveUser = function() {
 	return new Promise((resolve, reject) => {
-		http.delete("/users/inactive").then(res => {
+		http.delete("/users/inactive",{}, {
+			custom: {
+				auth: true
+			}
+		}).then(res => {
 			resolve(res);
 		}).catch(err => {
 			reject(err);

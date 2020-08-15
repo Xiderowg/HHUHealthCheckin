@@ -118,21 +118,25 @@
 					username: this.username,
 					password: this.password,
 					email: this.email
-				}
+				};
 				// service.addUser(data);
+
 				register(data).then(res => {
 					uni.showToast({
 						icon: 'none',
-						title: '注册成功，即将返回'
+						title: '注册成功，即将返回',
+						duration: 2000
 					});
-					uni.navigateBack({
-						delta: 1
-					});
+					setTimeout(() => {
+						uni.navigateBack({
+							delta: 1
+						})
+					}, 2000);
 				}).catch(err => {
 					uni.showToast({
 						icon: 'none',
 						title: '注册失败，用户名或邮箱已经被注册。',
-						duration: 3000
+						duration: 2000
 					});
 					this.refreshCode = Math.random();
 				})
