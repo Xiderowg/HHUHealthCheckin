@@ -20,6 +20,17 @@
 				<m-input type="text" clearable v-model="email" placeholder="请输入邮箱"></m-input>
 			</view>
 			<view class="input-row">
+				<text class="title">身份：</text>
+				<radio-group @change="radioChange">
+					<label class="radio" style="margin-right: 30rpx;">
+						<radio value="cb" />
+						<text>本科生</text></label>
+					<label class="radio">
+						<radio value="cg" checked="true" />
+						<text>研究生</text></label>
+				</radio-group>
+			</view>
+			<view class="input-row">
 				<text class="title">验证码：</text>
 				<m-input class="m-input" type="text" v-model="usercode" placeholder="请输入验证码"></m-input>
 				<valid-code v-model="validcode" :refresh="refreshcode" />
@@ -54,7 +65,8 @@
 				email: '',
 				usercode: '',
 				validcode: '',
-				refreshcode: 0
+				refreshcode: 0,
+				im_bachelor: false
 			}
 		},
 		mounted() {
@@ -65,6 +77,13 @@
 			});
 		},
 		methods: {
+			radioChange(evt){
+				if(evt.detail.value=="cb"){
+					this.im_bachelor=true;
+				}else{
+					this.im_bachelor=false;
+				}
+			},
 			register() {
 				/**
 				 * 客户端对账号信息进行一些必要的校验。
@@ -117,7 +136,8 @@
 				const data = {
 					username: this.username,
 					password: this.password,
-					email: this.email
+					email: this.email,
+					is_bachelor: this.im_bachelor
 				};
 				// service.addUser(data);
 

@@ -20,7 +20,7 @@ class CheckinResource(Resource):
         user_id = get_jwt_identity()
         user = User.query.get_or_404(user_id)
         if user is not None:
-            checkin.delay(user.username, user.password, user.email, user.is_admin)
+            checkin.delay(user.username, user.password, user.email, user.is_admin,user.is_bachelor)
             return {'msg': 'task started'}, 200
         else:
             return {'msg': 'wrong user id'}, 400
@@ -40,6 +40,6 @@ class AdminCheckinResource(Resource):
         query = User.query
         for user in query:
             print("now checkin for "+user.username)
-            checkin.delay(user.username, user.password, user.email, user.is_admin)
+            checkin.delay(user.username, user.password, user.email, user.is_admin,user.is_bachelor)
             # print("result:"+ret)
         return {'msg': 'tasks started'}, 200

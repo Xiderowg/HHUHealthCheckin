@@ -12,7 +12,7 @@
 			<view class="input-row">
 				<text class="title">重复：</text>
 				<m-input type="password" displayable v-model="confirmPassword" placeholder="请再一次输入密码"></m-input>
-			</view> 
+			</view>
 			<view class="input-row">
 				<text class="title">验证码：</text>
 				<m-input class="m-input" type="text" v-model="usercode" placeholder="请输入验证码"></m-input>
@@ -23,8 +23,8 @@
 			</view>
 		</view>
 		<view class="btn-row" style="margin-top: 10rpx;">
-			<button type="primary" class="primary" @tap="userCheckin">手动签到</button>
-			<button v-if="isAdmin" type="default" @tap="adminCheckin">全员签到</button>
+			<button type="primary" class="primary" @tap="userCheckin">手动打卡</button>
+			<button v-if="isAdmin" type="default" @tap="adminCheckin">全员打卡</button>
 			<button v-if="isAdmin" type="default" @tap="removeInactiveUser">清理用户</button>
 			<button type="default" @tap="bindLogout">退出登录</button>
 		</view>

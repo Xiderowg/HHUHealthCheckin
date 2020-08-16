@@ -13,6 +13,7 @@ def create_app(testing=False, cli=False):
     app = Flask("checkin_api")
     app.config.from_object("checkin_api.config")
 
+    app.config["PROPAGATE_EXCEPTIONS"] = True
     if testing is True:
         app.config["TESTING"] = True
 

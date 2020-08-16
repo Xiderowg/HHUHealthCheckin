@@ -21,6 +21,7 @@
 		</view>
 		<view class="action-row">
 			<navigator url="../reg/reg">注册账号</navigator>
+			<text>|</text>
 			<navigator url="../pwd/pwd">重置密码</navigator>
 		</view>
 		<view class="copyright-row">

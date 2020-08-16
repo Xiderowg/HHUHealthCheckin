@@ -11,6 +11,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     email = ma.String(required=True)
     password = ma.String(load_only=True, required=True)
     is_admin = ma.Boolean(dump_only=True)
+    is_bachelor = ma.Boolean()
 
     class Meta:
         model = User

@@ -38,7 +38,8 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    is_admin = db.Column(db.Boolean, default=False)
+    is_bachelor = db.Column(db.Boolean, default=False, nullable=False)
+    is_admin = db.Column(db.Boolean, default=False, nullable=False)
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)

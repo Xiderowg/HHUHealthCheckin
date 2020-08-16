@@ -1,7 +1,8 @@
 import pytest
 
 from checkin_api.app import init_celery
-from checkin_api.tasks.checkin import checkin, send_mail
+from checkin_api.tasks.checkin import checkin
+from checkin_api.tasks.mail import send_success_mail
 
 
 @pytest.fixture(scope="session")
@@ -20,7 +21,7 @@ def celery_worker_pool():
 
 
 def test_email(celery_session_app, celery_session_worker, test_user):
-    res = send_mail.delay(test_user.username, test_user.email)
+    res = send_success_mail.delay(test_user.username, test_user.email)
     assert res.get() == "OK"
 
 
@@ -31,5 +32,6 @@ def test_checkin(celery_session_app, celery_session_worker, test_user):
     :param celery_worker:
     :return:
     """
-    res = checkin.delay(test_user.username, test_user.password, test_user.email, test_user.is_admin)
+    res = checkin.delay(test_user.username, test_user.password, test_user.email, test_user.is_admin,
+                        test_user.is_bachelor)
     assert res.get() == "OK"

@@ -9,7 +9,7 @@ from checkin_api.tasks.mail import send_fail_mail, send_success_mail
 
 
 @celery.task
-def checkin(username, password, email, is_admin):
+def checkin(username, password, email, is_admin,is_bachelor=False):
     """
     打卡任务
     """
@@ -41,10 +41,15 @@ def checkin(username, password, email, is_admin):
     # 检查登录结果
     cookies = s.cookies.get_dict()
     if "iPlanetDirectoryPro" not in cookies.keys():
-        # send_failmail(username, email)
+        send_fail_mail(username, email)
+        user_checkin_data.total_fail_count += 1
+        db.session.commit()
         return "Checkin failed because of wrong username or password"
     # 获取wid和uid
-    res = s.get("http://form.hhu.edu.cn/pdc/formDesignApi/S/xznuPIjG", headers=ua)
+    if is_bachelor:
+        res = s.get("http://form.hhu.edu.cn/pdc/formDesignApi/S/gUTwwojq", headers=ua)
+    else:
+        res = s.get("http://form.hhu.edu.cn/pdc/formDesignApi/S/xznuPIjG", headers=ua)
     soup = BeautifulSoup(res.content, "lxml")
     all_scripts = soup.find_all('script')
     full_script = ""
@@ -105,4 +110,4 @@ def auto_checkin():
     if datetime.now().minute > 0:
         print("start auto checkin")
         for user in User.query:
-            checkin(user.username, user.password, user.email, user.is_admin)
+            checkin(user.username, user.password, user.email, user.is_admin,user.is_bachelor)
