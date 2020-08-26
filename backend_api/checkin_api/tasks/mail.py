@@ -61,7 +61,7 @@ def send_fail_mail(username, usermail):
     发送打卡失败邮件任务
     """
     # 构造邮件数据
-    content = '在【%s】尝试给【%s】打卡发生错误，建议手动进行打卡' % (username, datetime.now().strftime("%Y-%m-%d %H:%M"))
+    content = '在【%s】尝试给【%s】打卡发生错误，建议手动进行打卡。若您忘记了密码，可登陆小程序重置。若您不再需要打卡服务，可发邮件至admin@edlinus.cn申请销号或等待2日后自动销号。' % (username, datetime.now().strftime("%Y-%m-%d %H:%M"))
     subject = '【%s】！！打卡失败！！提醒' % datetime.now().strftime("%Y-%m-%d")
     # 发送邮件
     return send_mail(username, usermail, subject, content)

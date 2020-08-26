@@ -11,7 +11,7 @@ def clean_users():
     """
     now = datetime.now()
     for data in UserCheckinData.query:
-        if (now - data.last_checkin_time).total_seconds() / 3600 / 24 > 3:
+        if (now - data.last_checkin_time).total_seconds() / 3600 / 24 > 2:
             # 3天打卡均未成功，那么删除
             user = User.query.filter_by(username=data.username).first()
             if user.is_admin:

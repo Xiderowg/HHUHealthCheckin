@@ -9,7 +9,7 @@ from checkin_api.tasks.mail import send_fail_mail, send_success_mail
 
 
 @celery.task
-def checkin(username, password, email, is_admin,is_bachelor=False):
+def checkin(username, password, email, is_admin, is_bachelor=False):
     """
     打卡任务
     """
@@ -23,6 +23,12 @@ def checkin(username, password, email, is_admin,is_bachelor=False):
     # 如果今天晚6点以后打卡过了，就不打了
     if user_checkin_data.last_checkin_time.hour >= 18 and user_checkin_data.last_checkin_time.day == datetime.now().day:
         return "Already Checked OK"
+    # 重置今日打卡失败次数
+    if user_checkin_data.last_attempt_time.day != datetime.now().day:
+        user_checkin_data.today_fail_count = 0
+    # 如果今日打卡失败次数超过3，那今日不再打卡
+    if user_checkin_data.today_fail_count >= 3:
+        return "Failed too many times today, abort"
     # 开始打卡
     ua = {
         "User-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36"}
@@ -43,6 +49,8 @@ def checkin(username, password, email, is_admin,is_bachelor=False):
     if "iPlanetDirectoryPro" not in cookies.keys():
         send_fail_mail(username, email)
         user_checkin_data.total_fail_count += 1
+        user_checkin_data.today_fail_count += 1
+        user_checkin_data.last_attempt_time = datetime.now()
         db.session.commit()
         return "Checkin failed because of wrong username or password"
     # 获取wid和uid
@@ -67,7 +75,11 @@ def checkin(username, password, email, is_admin,is_bachelor=False):
         wid = re.findall(data_pattern, wid_line)[0]
         uid = re.findall(data_pattern, uid_line)[0]
     except IndexError:
-        # send_failmail(username, email)
+        user_checkin_data.total_fail_count += 1
+        user_checkin_data.today_fail_count += 1
+        user_checkin_data.last_attempt_time = datetime.now()
+        db.session.commit()
+        send_fail_mail(username, email)
         return "Checkin failed on getting wid and uid, detailed script:\n" + full_script
     # 计算最终的API入口
     api_url = "http://form.hhu.edu.cn/pdc/formDesignApi/dataFormSave?wid=%s&userId=%s" % (wid, uid)
@@ -78,7 +90,11 @@ def checkin(username, password, email, is_admin,is_bachelor=False):
         del fill_data["CLRQ"]
         del fill_data["USERID"]
     except IndexError:
-        # send_failmail(username, email)
+        user_checkin_data.total_fail_count += 1
+        user_checkin_data.today_fail_count += 1
+        user_checkin_data.last_attempt_time = datetime.now()
+        db.session.commit()
+        send_fail_mail(username, email)
         return "Checkin failed on getting historical data, detailed script:\n" + full_script
     checkin_data = fill_data
     checkin_data["DATETIME_CYCLE"] = datetime.now().strftime("%Y/%m/%d")
@@ -86,18 +102,26 @@ def checkin(username, password, email, is_admin,is_bachelor=False):
     try:
         res = s.post(api_url, checkin_data, timeout=10)
     except requests.exceptions.RequestException:
-        # send_failmail(username, email)
+        user_checkin_data.total_fail_count += 1
+        user_checkin_data.today_fail_count += 1
+        user_checkin_data.last_attempt_time = datetime.now()
+        db.session.commit()
+        send_fail_mail(username, email)
         return "Checkin failed on posting message to server"
     if res.status_code == 200:
         user_checkin_data.last_checkin_time = datetime.now()
+        user_checkin_data.last_attempt_time = user_checkin_data.last_checkin_time
         user_checkin_data.total_checkin_count += 1
+        user_checkin_data.today_fail_count = 0
         db.session.commit()
         send_success_mail(username, email)
         return "OK"
     else:
         user_checkin_data.total_fail_count += 1
+        user_checkin_data.today_fail_count += 1
+        user_checkin_data.last_attempt_time = datetime.now()
         db.session.commit()
-        # send_failmail(username, email)
+        send_fail_mail(username, email)
         return "Checkin failed on last procedure"
 
 
@@ -110,4 +134,4 @@ def auto_checkin():
     if datetime.now().minute > 0:
         print("start auto checkin")
         for user in User.query:
-            checkin(user.username, user.password, user.email, user.is_admin,user.is_bachelor)
+            checkin(user.username, user.password, user.email, user.is_admin, user.is_bachelor)

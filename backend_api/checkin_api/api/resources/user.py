@@ -27,7 +27,8 @@ class UserResource(Resource):
         schema = UserSchema(partial=True)
         user = User.query.get_or_404(user_id)
         user = schema.load(request.json, instance=user)
-
+        user_data = UserCheckinData.query.get_or_404(user_id)
+        user_data.today_fail_count = 0
         db.session.commit()
 
         return {"msg": "user updated", "user": schema.dump(user)}
@@ -105,8 +106,10 @@ class CreateUserResource(Resource):
         checkin_data = UserCheckinData(user=user)
         checkin_data.username = user.username
         checkin_data.last_checkin_time = now
+        checkin_data.last_attempt_time = now
         checkin_data.total_checkin_count = 0
         checkin_data.total_fail_count = 0
+        checkin_data.today_fail_count = 0
 
         db.session.add(checkin_data)
         db.session.commit()

@@ -85,10 +85,10 @@
 				return this.totalCount - this.failCount;
 			},
 			successRatio: function() {
-				return this.totalCount > 0 ? Math.round(this.successCount / this.totalCount, 1) : 1;
+				return this.totalCount > 0 ? (this.successCount / this.totalCount).toFixed(2) : 1;
 			},
 			failRatio: function() {
-				return this.totalCount > 0 ? Math.round(this.failCount / this.totalCount, 1) : 0;
+				return this.totalCount > 0 ? (this.failCount / this.totalCount).toFixed(2) : 0;
 			}
 		},
 		methods: {

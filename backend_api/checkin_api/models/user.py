@@ -20,8 +20,10 @@ class UserCheckinData(db.Model):
     id = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"), primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     last_checkin_time = db.Column(db.DateTime, nullable=True)
+    last_attempt_time = db.Column(db.DateTime, nullable=True)
     total_checkin_count = db.Column(db.Integer)
     total_fail_count = db.Column(db.Integer)
+    today_fail_count = db.Column(db.Integer)
 
     user = relationship('User', backref=db.backref('usercheckindatas', cascade="all, delete-orphan"))
 
